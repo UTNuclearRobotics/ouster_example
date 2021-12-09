@@ -95,8 +95,14 @@ sensor_msgs::PointCloud2 cloud_to_cloud_msg(const Cloud& cloud, ns timestamp,
                                             const std::string& frame) {
     sensor_msgs::PointCloud2 msg{};
     pcl::toROSMsg(cloud, msg);
+    
     msg.header.frame_id = frame;
-    msg.header.stamp.fromNSec(timestamp.count());
+    if (ros::ok()) {
+        msg.header.stamp = ros::Time::now();
+    } else {
+        msg.header.stamp.fromNSec(timestamp.count());
+    }
+    
     return msg;
 }
 
